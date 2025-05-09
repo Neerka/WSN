@@ -39,9 +39,6 @@ w, theta = compute_weights_and_theta(c_sum)
 
 x = generate_initial_state(25)
 
-print("x(0):", x)
-x = hopfield_step(x, w, theta)
-print("x(1):", x)
-x = hopfield_step(x, w, theta)
-print("x(2):", x)
-# itd.
+for i in range(3):
+    print(f"x({str(i)+" " if i<10 else i}):", x)
+    x = hopfield_step(x, w, theta)
