@@ -1,4 +1,6 @@
 import random
+import matplotlib.pyplot as plt
+import numpy as np
 
 def generate_initial_state(n):
     return [random.randint(0, 1) for _ in range(n)]
@@ -23,17 +25,44 @@ def hopfield_step(x, w, theta):
             x_new[i] = 1
         elif u < 0:
             x_new[i] = 0
-        # else: x[i] stays the same
+
     return x_new
 
-# Przykład użycia:
-z = [1] * 25  # lub jakiś inny wzorzec
+def plot_final_state(x: list[int]) -> None:
+    """Rysuje ostatni stan x jako siatkę 5x5 z widocznymi granicami.
+
+    Args:
+        x (list[int]): Stan x (25 elementów).
+    """
+    x_matrix = np.array(x).reshape(5, 5)
+
+    plt.figure(figsize=(5, 5))
+    plt.title("Final State (x)")
+    plt.imshow(x_matrix, cmap="binary", interpolation="nearest")
+    plt.colorbar()
+    plt.axis("off")
+
+    # Dodanie siatki
+    for i in range(6):  # Linie poziome
+        plt.axhline(i - 0.5, color="black", linewidth=0.5)
+    for j in range(6):  # Linie pionowe
+        plt.axvline(j - 0.5, color="black", linewidth=0.5)
+
+    plt.show()
+
+z = [
+    0,0,0,0,0,
+    0,1,1,0,0,
+    0,0,1,0,0,
+    0,0,1,0,0,
+    0,0,1,0,0
+]
 c = compute_c(z)
 w, theta = compute_weights_and_theta(c)
 x = generate_initial_state(25)
 
 print("x(0):", x)
-x = hopfield_step(x, w, theta)
-print("x(1):", x)
-x = hopfield_step(x, w, theta)
-print("x(2):", x)
+for i in range(3):
+    print(f"x({i}):", x)
+    plot_final_state(x)
+    x = hopfield_step(x, w, theta)
